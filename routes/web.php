@@ -28,6 +28,7 @@ Route::get('/cek-transaksi', \App\Livewire\TransactionCheck::class)->middleware(
 Route::get('/kalkulator', \App\Livewire\Features\Calculator::class)->name('calculator.index');
 Route::get('/leaderboard', \App\Livewire\Features\Leaderboard::class)->name('leaderboard');
 Route::get('/news/{news:slug}', \App\Livewire\NewsShow::class)->name('news.show');
+Route::get('/minigame', \App\Livewire\Features\FlappyGame::class)->name('minigame');
 
 // User Dashboard
 Route::get('dashboard', function () {

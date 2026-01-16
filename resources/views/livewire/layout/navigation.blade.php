@@ -36,6 +36,9 @@ new class extends Component
                     <x-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')" wire:navigate class="text-gray-400 hover:text-white">
                         {{ __('Top Up') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('minigame')" :active="request()->routeIs('minigame')" wire:navigate class="text-gray-400 hover:text-brand-yellow font-bold">
+                        {{ __('Mini Game 🎮') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -94,6 +97,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')" wire:navigate class="text-gray-400 hover:text-white">
                 {{ __('Top Up') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('minigame')" :active="request()->routeIs('minigame')" wire:navigate class="text-gray-400 hover:text-brand-yellow font-bold">
+                {{ __('Mini Game 🎮') }}
             </x-responsive-nav-link>
         </div>
 

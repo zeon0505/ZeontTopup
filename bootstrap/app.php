@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\VerifySecurityPin::class,
         ]);
     })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        $schedule->command('minigame:reset')->dailyAt('00:01');
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
