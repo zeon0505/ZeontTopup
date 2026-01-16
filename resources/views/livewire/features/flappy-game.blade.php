@@ -217,15 +217,25 @@
             window.startGame = function() {
                 if (gameRunning) return;
                 
-                bird = { x: 80, y: (canvas?.height || 300)/2, velocity: 0, radius: 14, rotation: 0 };
+                // Re-init elements if needed
+                if (!canvas || !startOverlay) initGame();
+                if (!canvas || canvas.height <= 0) resizeCanvas();
+                
+                // Safety check
+                if (!canvas || canvas.height <= 0) {
+                   console.error("Canvas not ready");
+                   return;
+                }
+
+                bird = { x: 80, y: canvas.height/2, velocity: 0, radius: 14, rotation: 0 };
                 pipes = [];
                 score = 0;
                 frame = 0;
                 gameRunning = true;
                 
-                startOverlay.style.display = 'none';
-                gameHud.classList.remove('hidden');
-                scoreDisplay.innerText = "0";
+                if(startOverlay) startOverlay.style.display = 'none';
+                if(gameHud) gameHud.classList.remove('hidden');
+                if(scoreDisplay) scoreDisplay.innerText = "0";
                 
                 gameLoop();
             };
@@ -244,33 +254,43 @@
                 
                 // Update Overlay UI
                 const gameOverContent = document.getElementById('game-over-content');
+                const startContent = document.getElementById('start-content');
                 const finalScore = document.getElementById('final-score');
                 const highscoreBadge = document.getElementById('new-highscore-badge');
                 const buttonText = document.getElementById('button-text');
                 const startTitle = document.getElementById('start-title');
 
-                finalScore.innerText = score;
-                gameOverContent.classList.remove('hidden');
-                startTitle.innerText = "MAIN LAGI?";
-                buttonText.innerText = "RESTART GAME";
+                if (finalScore) finalScore.innerText = score;
+                if (gameOverContent) gameOverContent.classList.remove('hidden');
+                if (startContent) startContent.classList.add('hidden');
+                if (startTitle) startTitle.innerText = "MAIN LAGI?";
+                if (buttonText) buttonText.innerText = "RESTART GAME";
 
                 if (score > userHighScore && score > 0) {
-                    highscoreBadge.classList.remove('hidden');
+                    if (highscoreBadge) highscoreBadge.classList.remove('hidden');
                     userHighScore = score;
                 } else {
-                    highscoreBadge.classList.add('hidden');
+                    if (highscoreBadge) highscoreBadge.classList.add('hidden');
                 }
                 
-                startOverlay.style.display = 'flex';
-                startOverlay.classList.remove('opacity-0');
+                if (startOverlay) {
+                    startOverlay.style.display = 'flex';
+                    startOverlay.classList.remove('opacity-0');
+                }
                 
                 // Submit score to Livewire
                 @if(auth()->check())
-                    @this.submitScore(score);
+                    try {
+                        @this.submitScore(score);
+                    } catch(e) {
+                        const lw = window.Livewire.find(document.getElementById('game-container').closest('[wire:id]').getAttribute('wire:id'));
+                        if(lw) lw.submitScore(score);
+                    }
                 @endif
             }
 
             function drawBird() {
+                if (!ctx) return;
                 ctx.save();
                 ctx.translate(bird.x, bird.y);
                 ctx.rotate(bird.rotation);
@@ -315,6 +335,7 @@
             }
 
             function drawPipe(x, h, gap) {
+                if (!ctx) return;
                 const pipeGrad = ctx.createLinearGradient(x, 0, x + PIPE_WIDTH, 0);
                 pipeGrad.addColorStop(0, '#1e293b');
                 pipeGrad.addColorStop(0.5, '#475569');
@@ -340,7 +361,7 @@
             }
 
             function gameLoop() {
-                if (!gameRunning) return;
+                if (!gameRunning || !ctx) return;
 
                 // Difficulty Phases
                 let currentSpeed = 3;
@@ -349,17 +370,15 @@
 
                 if (score < 10) {
                     currentSpeed = 3.2;
-                    obstacleDifficulty = 0;
                 } else if (score < 30) {
                     currentSpeed = 3.8;
-                    obstacleDifficulty = 1; // Moving
+                    obstacleDifficulty = 1;
                 } else if (score < 40) {
-                    currentSpeed = 2.8; // Santai
-                    obstacleDifficulty = 0; // No moving
-                    currentGap = 175; // Wider gap
+                    currentSpeed = 2.8;
+                    currentGap = 175;
                 } else if (score < 60) {
                     currentSpeed = 4.2;
-                    obstacleDifficulty = 2; // Fast moving
+                    obstacleDifficulty = 2;
                     currentGap = 145;
                 } else {
                     currentSpeed = 4.8;
@@ -367,22 +386,22 @@
                     currentGap = 135;
                 }
 
-                // Background Colors for Phases
+                // Background
                 const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
                 if (score >= 30 && score < 40) {
-                    bgGrad.addColorStop(0, '#064e3b'); // Relaxed Green
+                    bgGrad.addColorStop(0, '#064e3b');
                     bgGrad.addColorStop(1, '#065f46');
                 } else if (score >= 40) {
-                    bgGrad.addColorStop(0, '#1e1b4b'); // Intense Purple/Red
+                    bgGrad.addColorStop(0, '#1e1b4b');
                     bgGrad.addColorStop(1, '#450a0a');
                 } else {
-                    bgGrad.addColorStop(0, '#0f172a'); // Standard Dark
+                    bgGrad.addColorStop(0, '#0f172a');
                     bgGrad.addColorStop(1, '#1e293b');
                 }
                 ctx.fillStyle = bgGrad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Clouds Decor
+                // Clouds
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
                 clouds.forEach(c => {
                     c.x -= c.speed;
@@ -404,7 +423,7 @@
 
                 drawBird();
 
-                // Pipe Spawning
+                // Pipes
                 const currentSpawnRate = score >= 40 ? 85 : SPAWN_RATE;
                 if (frame % currentSpawnRate === 0) {
                     const h = Math.random() * (canvas.height - currentGap - 150) + 75;
@@ -422,7 +441,6 @@
                     const p = pipes[i];
                     p.x -= currentSpeed;
 
-                    // Obstacle Movement logic
                     if (obstacleDifficulty > 0) {
                         const moveSpeed = obstacleDifficulty === 1 ? 1.2 : 2.0;
                         const moveRange = obstacleDifficulty === 1 ? 40 : 75;
@@ -433,7 +451,6 @@
                     const activeH = p.h + p.yOffset;
                     drawPipe(p.x, activeH, p.gap);
 
-                    // Collistion detection
                     if (bird.x + bird.radius - 5 > p.x && bird.x - bird.radius + 5 < p.x + PIPE_WIDTH) {
                         if (bird.y - bird.radius + 5 < activeH || bird.y + bird.radius - 5 > activeH + p.gap) {
                             gameOver();
@@ -444,7 +461,7 @@
                     if (!p.passed && p.x + PIPE_WIDTH < bird.x) {
                         p.passed = true;
                         score++;
-                        scoreDisplay.innerText = score;
+                        if (scoreDisplay) scoreDisplay.innerText = score;
                     }
 
                     if (p.x + PIPE_WIDTH < -20) pipes.splice(i, 1);
