@@ -17,6 +17,8 @@ class ProductEdit extends Component
     public $original_price;
     public $quantity;
     public $is_active;
+    public $provider_name;
+    public $provider_product_code;
 
     protected $rules = [
         'game_id' => 'required|exists:games,id',
@@ -26,6 +28,8 @@ class ProductEdit extends Component
         'original_price' => 'nullable|numeric|min:0',
         'quantity' => 'required|integer|min:0',
         'is_active' => 'boolean',
+        'provider_name' => 'nullable|string',
+        'provider_product_code' => 'nullable|string',
     ];
 
     public function mount(Product $product)
@@ -38,6 +42,8 @@ class ProductEdit extends Component
         $this->original_price = $product->original_price;
         $this->quantity = $product->quantity;
         $this->is_active = $product->is_active;
+        $this->provider_name = $product->provider_name;
+        $this->provider_product_code = $product->provider_product_code;
     }
 
     public function save()
@@ -53,6 +59,8 @@ class ProductEdit extends Component
                 'original_price' => $this->original_price,
                 'quantity' => $this->quantity,
                 'is_active' => $this->is_active,
+                'provider_name' => $this->provider_name,
+                'provider_product_code' => $this->provider_product_code,
             ]);
 
             session()->flash('success', 'Product updated successfully!');

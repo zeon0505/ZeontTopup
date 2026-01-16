@@ -145,6 +145,49 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Automation (Provider) -->
+                    <div class="space-y-6 pt-6 border-t border-gray-700/50">
+                        <h3 class="text-lg font-bold text-white border-b border-gray-700/50 pb-2">Automation (Provider)</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Provider Name -->
+                            <div class="space-y-2">
+                                <label for="provider_name" class="block text-sm font-medium text-gray-400">Select Provider</label>
+                                <div class="relative">
+                                    <select 
+                                        id="provider_name"
+                                        wire:model="provider_name"
+                                        class="block w-full px-4 py-3 rounded-xl bg-dark-900 border border-gray-700 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors duration-200 appearance-none"
+                                    >
+                                        <option value="">-- Manual (No Auto-Delivery) --</option>
+                                        <option value="digiflazz">Digiflazz</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500">Choose "Manual" if you want to process orders yourself.</p>
+                                @error('provider_name') <p class="text-sm text-red-400 mt-1">{{ $message }}</p> @enderror
+                            </div>
+
+                            <!-- Provider SKU -->
+                            <div class="space-y-2">
+                                <label for="provider_product_code" class="block text-sm font-medium text-gray-400">Provider Product Code (SKU)</label>
+                                <input 
+                                    type="text" 
+                                    id="provider_product_code"
+                                    wire:model="provider_product_code"
+                                    class="block w-full px-4 py-3 rounded-xl bg-dark-900 border border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors duration-200"
+                                    placeholder="e.g., ml10"
+                                >
+                                <p class="text-xs text-gray-500">The SKU code from your provider dashboard.</p>
+                                @error('provider_product_code') <p class="text-sm text-red-400 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Footer Actions -->

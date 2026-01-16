@@ -15,6 +15,8 @@ class ProductCreate extends Component
     public $original_price = 0;
     public $quantity = 0;
     public $is_active = true;
+    public $provider_name = '';
+    public $provider_product_code = '';
 
     protected $rules = [
         'game_id' => 'required|exists:games,id',
@@ -24,6 +26,8 @@ class ProductCreate extends Component
         'original_price' => 'nullable|numeric|min:0',
         'quantity' => 'required|integer|min:0',
         'is_active' => 'boolean',
+        'provider_name' => 'nullable|string',
+        'provider_product_code' => 'nullable|string',
     ];
 
     public function save()
@@ -38,6 +42,8 @@ class ProductCreate extends Component
             'original_price' => $this->original_price,
             'quantity' => $this->quantity,
             'is_active' => $this->is_active,
+            'provider_name' => $this->provider_name,
+            'provider_product_code' => $this->provider_product_code,
         ]);
 
         session()->flash('success', 'Product created successfully!');
