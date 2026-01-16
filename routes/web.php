@@ -63,7 +63,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
     
-    // Games Management with separate pages
+    // Games Management
     Route::get('/games', function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.games.index');
@@ -83,17 +83,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.games.edit', compact('game'));
     })->name('admin.games.edit');
-
-    Route::get('/vouchers', function () {
-        abort_unless(auth()->user()->is_admin, 403);
-        return view('admin.games.index');
-    })->name('admin.vouchers');
-    
-    // Flash Sales
-    Route::get('/flash-sales', function () {
-        abort_unless(auth()->user()->is_admin, 403);
-        return view('admin.flash-sales');
-    })->name('admin.flash-sales.index');
 
     // Products Management
     Route::get('/products', function () {
@@ -116,24 +105,26 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return view('admin.products.edit', compact('product'));
     })->name('admin.products.edit');
     
-    // Orders
+    // Flash Sales
+    Route::get('/flash-sales', \App\Livewire\Admin\FlashSaleManager::class)->name('admin.flash-sales.index');
+    
+    // Orders & Users
     Route::get('/orders', function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.orders');
     })->name('admin.orders');
     
-    // Users
     Route::get('/users', function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.users');
     })->name('admin.users');
     
-    // API Settings
+    // Settings & Configuration
     Route::get('/api-settings', function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.api');
     })->name('admin.api');
-    // Payment Methods
+
     Route::get('/payment-methods', function () {
         abort_unless(auth()->user()->is_admin, 403);
         return view('admin.payment-methods');
@@ -144,28 +135,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return view('admin.banners');
     })->name('admin.banners');
 
-    // Flash Sales
-    Route::get('/flash-sales', \App\Livewire\Admin\FlashSaleManager::class)
-        ->name('admin.flash-sales');
-    
-    // Vouchers
-    Route::get('/vouchers', \App\Livewire\Admin\VoucherManager::class)
-        ->name('admin.vouchers');
-
-    // Reviews
-    Route::get('/reviews', \App\Livewire\Admin\ReviewManager::class)
-        ->name('admin.reviews');
-
-    // Referrals
-    Route::get('/referrals', \App\Livewire\Admin\ReferralManager::class)
-        ->name('admin.referrals');
-
+    Route::get('/vouchers', \App\Livewire\Admin\VoucherManager::class)->name('admin.vouchers');
+    Route::get('/reviews', \App\Livewire\Admin\ReviewManager::class)->name('admin.reviews');
+    Route::get('/referrals', \App\Livewire\Admin\ReferralManager::class)->name('admin.referrals');
     Route::get('/settings', \App\Livewire\Admin\SettingManager::class)->name('admin.settings');
-
-    // News
-    Route::get('/news', \App\Livewire\Admin\NewsManager::class)
-        ->name('admin.news');
-
+    Route::get('/news', \App\Livewire\Admin\NewsManager::class)->name('admin.news');
     Route::get('/verify-pin', \App\Livewire\Admin\PinVerify::class)->name('admin.pin.verify');
 });
 
