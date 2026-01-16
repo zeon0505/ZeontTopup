@@ -16,6 +16,8 @@ class Product extends Model
         'original_price',
         'quantity',
         'is_active',
+        'provider_name',
+        'provider_product_code',
         'sort_order',
     ];
 

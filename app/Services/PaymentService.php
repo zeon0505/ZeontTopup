@@ -220,6 +220,14 @@ class PaymentService
             }
             
             if (in_array($order->status, ['processing', 'completed'])) {
+                // Trigger Fulfillment
+                try {
+                    $fulfillmentManager = app(\App\Services\Fulfillment\FulfillmentManager::class);
+                    $fulfillmentManager->processOrder($order);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Fulfillment Trigger Error: " . $e->getMessage());
+                }
+
                 $this->processReferralCommission($order);
                 $this->processLoyaltyPoints($order);
                 

@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(GameCheckServiceInterface::class, MockGameCheckService::class);
+        $this->app->bind(\App\Services\Fulfillment\ProviderServiceInterface::class, \App\Services\Fulfillment\DigiflazzService::class);
     }
 
     /**

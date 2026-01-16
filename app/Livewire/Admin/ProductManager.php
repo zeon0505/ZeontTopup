@@ -20,6 +20,8 @@ class ProductManager extends Component
     public $original_price = 0;
     public $quantity = 0;
     public $is_active = true;
+    public $provider_name = '';
+    public $provider_product_code = '';
 
     protected $rules = [
         'gameId' => 'required|exists:games,id',
@@ -28,11 +30,13 @@ class ProductManager extends Component
         'original_price' => 'nullable|numeric|min:0',
         'quantity' => 'required|integer|min:0',
         'is_active' => 'boolean',
+        'provider_name' => 'nullable|string',
+        'provider_product_code' => 'nullable|string',
     ];
 
     public function openCreateModal()
     {
-        $this->reset(['name', 'description', 'price', 'original_price', 'quantity', 'editingProductId']);
+        $this->reset(['name', 'description', 'price', 'original_price', 'quantity', 'editingProductId', 'provider_name', 'provider_product_code']);
         $this->is_active = true;
         $this->showModal = true;
     }
@@ -48,6 +52,8 @@ class ProductManager extends Component
         $this->original_price = $product->original_price;
         $this->quantity = $product->quantity;
         $this->is_active = $product->is_active;
+        $this->provider_name = $product->provider_name;
+        $this->provider_product_code = $product->provider_product_code;
         $this->showModal = true;
     }
 
@@ -65,6 +71,8 @@ class ProductManager extends Component
                 'original_price' => $this->original_price,
                 'quantity' => $this->quantity,
                 'is_active' => $this->is_active,
+                'provider_name' => $this->provider_name,
+                'provider_product_code' => $this->provider_product_code,
             ]);
         } else {
             \App\Models\Product::create([
@@ -75,6 +83,8 @@ class ProductManager extends Component
                 'original_price' => $this->original_price,
                 'quantity' => $this->quantity,
                 'is_active' => $this->is_active,
+                'provider_name' => $this->provider_name,
+                'provider_product_code' => $this->provider_product_code,
             ]);
         }
 

@@ -43,4 +43,10 @@ return [
         'is_3ds' => env('MIDTRANS_IS_3DS', true),
     ],
 
+    'digiflazz' => [
+        'username' => env('DIGIFLAZZ_USERNAME'),
+        'api_key' => env('DIGIFLAZZ_API_KEY'),
+        'mode' => env('DIGIFLAZZ_MODE', 'sandbox'),
+    ],
+
 ];

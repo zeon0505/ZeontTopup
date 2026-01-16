@@ -112,6 +112,20 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-300">Provider Name</label>
+                            <select wire:model="provider_name" class="w-full px-4 py-2 text-white bg-gray-900 border border-gray-700 rounded-lg">
+                                <option value="">Manual (No Auto-Delivery)</option>
+                                <option value="digiflazz">Digiflazz</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-300">Provider SKUs (Code)</label>
+                            <input wire:model="provider_product_code" type="text" placeholder="e.g. ML10" class="w-full px-4 py-2 text-white bg-gray-900 border border-gray-700 rounded-lg">
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-300">Quantity</label>
                         <input wire:model="quantity" type="number" class="w-full px-4 py-2 text-white bg-gray-900 border border-gray-700 rounded-lg">
