@@ -69,7 +69,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.flash-sales') }}" class="block p-6 bg-dark-800 rounded-xl border border-gray-700 hover:border-brand-yellow transition-all group">
+            <a href="{{ route('admin.flash-sales.index') }}" class="block p-6 bg-dark-800 rounded-xl border border-gray-700 hover:border-brand-yellow transition-all group">
                 <div class="flex items-center gap-4">
                     <div class="p-4 bg-brand-yellow/10 rounded-lg group-hover:bg-brand-yellow group-hover:text-black transition-colors text-brand-yellow">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>

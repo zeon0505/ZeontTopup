@@ -95,7 +95,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return view('admin.flash-sales');
     })->name('admin.flash-sales.index');
 
-    // Products
     // Products Management
     Route::get('/products', function () {
         abort_unless(auth()->user()->is_admin, 403);
