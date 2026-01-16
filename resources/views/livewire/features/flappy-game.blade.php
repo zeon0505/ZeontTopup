@@ -23,7 +23,7 @@
                 </div>
 
                 <!-- Game Canvas Container -->
-                <div class="relative aspect-[16/9] w-full bg-slate-950 rounded-2xl border border-white/5 overflow-hidden shadow-inner cursor-pointer" id="game-container">
+                <div class="relative aspect-[16/9] w-full bg-slate-950 rounded-2xl border border-white/5 overflow-hidden shadow-inner cursor-pointer" id="game-container" wire:ignore>
                     <canvas id="gameCanvas" class="w-full h-full"></canvas>
                     
                     <!-- Start Overlay -->
@@ -92,7 +92,7 @@
                     Top Leaders Hari Ini
                 </h3>
 
-                <div class="space-y-3">
+                <div class="space-y-3" x-on:score-updated.window="$wire.loadData()">
                     @forelse($leaderboard as $index => $score)
                         <div class="flex items-center justify-between p-4 rounded-2xl {{ $index == 0 ? 'bg-gradient-to-r from-brand-yellow/20 to-transparent border border-brand-yellow/30' : 'bg-white/5 border border-white/5' }} transition-all hover:bg-white/10">
                             <div class="flex items-center gap-4">
@@ -127,148 +127,160 @@
 
     <!-- Game Script -->
     <script>
-        document.addEventListener('livewire:navigated', () => {
-            initGame();
-        });
+        (function() {
+            let canvas, ctx, startOverlay, gameHud, scoreDisplay;
+            let gameRunning = false;
+            let score = 0;
+            let animationId;
+            let frame = 0;
+            let pipes = [];
+            let bird = { x: 50, y: 150, velocity: 0, radius: 12 };
 
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const startOverlay = document.getElementById('start-overlay');
-        const gameHud = document.getElementById('game-hud');
-        const scoreDisplay = document.getElementById('current-score');
-        
-        let gameRunning = false;
-        let score = 0;
-        let animationId;
+            const GRAVITY = 0.25;
+            const FLAP = -4.5;
+            const SPAWN_RATE = 90;
+            const PIPE_WIDTH = 50;
+            const PIPE_GAP = 160;
 
-        // Game Constants
-        const GRAVITY = 0.25;
-        const FLAP = -4.5;
-        const SPAWN_RATE = 90; // frames
-        const PIPE_WIDTH = 50;
-        const PIPE_GAP = 160;
+            function initGame() {
+                canvas = document.getElementById('gameCanvas');
+                if (!canvas) return;
+                ctx = canvas.getContext('2d');
+                startOverlay = document.getElementById('start-overlay');
+                gameHud = document.getElementById('game-hud');
+                scoreDisplay = document.getElementById('current-score');
 
-        let bird = { x: 50, y: 150, velocity: 0, radius: 12 };
-        let pipes = [];
-        let frame = 0;
+                resizeCanvas();
+                
+                // Clear existing listeners to prevent duplication
+                window.removeEventListener('resize', resizeCanvas);
+                window.addEventListener('resize', resizeCanvas);
+                
+                // Use a single keydown listener on window
+                if (!window.flappyKeyHandler) {
+                    window.flappyKeyHandler = (e) => {
+                        if (e.code === 'Space') {
+                            const currentCanvas = document.getElementById('gameCanvas');
+                            if (!currentCanvas) return;
+                            
+                            if (!gameRunning) window.startGame();
+                            else window.flap();
+                            e.preventDefault();
+                        }
+                    };
+                    window.addEventListener('keydown', window.flappyKeyHandler);
+                }
 
-        function initGame() {
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            window.addEventListener('keydown', (e) => {
-                if(e.code === 'Space') {
-                    if(!gameRunning) startGame();
-                    else flap();
+                canvas.onmousedown = (e) => {
+                    if (!gameRunning) window.startGame();
+                    else window.flap();
                     e.preventDefault();
+                };
+            }
+
+            function resizeCanvas() {
+                const container = document.getElementById('game-container');
+                if (!container || !canvas) return;
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+            }
+
+            window.startGame = function() {
+                if (gameRunning) return;
+                
+                bird = { x: 50, y: canvas.height/2, velocity: 0, radius: 12 };
+                pipes = [];
+                score = 0;
+                frame = 0;
+                gameRunning = true;
+                
+                startOverlay.style.display = 'none';
+                gameHud.classList.remove('hidden');
+                scoreDisplay.innerText = "0";
+                
+                gameLoop();
+            };
+
+            window.flap = function() {
+                if (gameRunning) bird.velocity = FLAP;
+            };
+
+            function gameOver() {
+                if (!gameRunning) return;
+                gameRunning = false;
+                cancelAnimationFrame(animationId);
+                
+                startOverlay.style.display = 'flex';
+                startOverlay.classList.remove('opacity-0');
+                
+                // Submit score to Livewire
+                const livewireComponent = window.Livewire.find(
+                    document.getElementById('game-container').closest('[wire:id]').getAttribute('wire:id')
+                );
+                if (livewireComponent) {
+                    livewireComponent.submitScore(score);
                 }
-            });
-            canvas.addEventListener('mousedown', () => {
-                if(!gameRunning) startGame();
-                else flap();
-            });
-        }
-
-        function resizeCanvas() {
-            const container = document.getElementById('game-container');
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
-
-        function startGame() {
-            if(gameRunning) return;
-            
-            // Reset state
-            bird = { x: 50, y: canvas.height/2, velocity: 0, radius: 12 };
-            pipes = [];
-            score = 0;
-            frame = 0;
-            gameRunning = true;
-            
-            startOverlay.classList.add('opacity-0');
-            setTimeout(() => startOverlay.style.display = 'none', 300);
-            gameHud.classList.remove('hidden');
-            
-            gameLoop();
-        }
-
-        function flap() {
-            bird.velocity = FLAP;
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            cancelAnimationFrame(animationId);
-            
-            startOverlay.style.display = 'flex';
-            setTimeout(() => startOverlay.classList.remove('opacity-0'), 10);
-            
-            // Submit to Livewire
-            @this.submitScore(score);
-        }
-
-        function gameLoop() {
-            if(!gameRunning) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Bird physics
-            bird.velocity += GRAVITY;
-            bird.y += bird.velocity;
-
-            // Collision check
-            if(bird.y + bird.radius > canvas.height || bird.y - bird.radius < 0) {
-                gameOver();
-                return;
             }
 
-            // Draw Bird
-            ctx.fillStyle = '#facc15'; // brand-yellow
-            ctx.beginPath();
-            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
-            ctx.fill();
-            // Eye
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.arc(bird.x + 6, bird.y - 4, 3, 0, Math.PI * 2);
-            ctx.fill();
+            function gameLoop() {
+                if (!gameRunning) return;
 
-            // Pipes
-            if(frame % SPAWN_RATE === 0) {
-                const h = Math.random() * (canvas.height - PIPE_GAP - 100) + 50;
-                pipes.push({ x: canvas.width, h: h, passed: false });
-            }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            for(let i = pipes.length - 1; i >= 0; i--) {
-                const p = pipes[i];
-                p.x -= 3;
+                bird.velocity += GRAVITY;
+                bird.y += bird.velocity;
 
-                // Draw Pipe
-                ctx.fillStyle = '#334155';
-                ctx.fillRect(p.x, 0, PIPE_WIDTH, p.h);
-                ctx.fillRect(p.x, p.h + PIPE_GAP, PIPE_WIDTH, canvas.height - p.h - PIPE_GAP);
+                if (bird.y + bird.radius > canvas.height || bird.y - bird.radius < 0) {
+                    gameOver();
+                    return;
+                }
 
-                // Collision
-                if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + PIPE_WIDTH) {
-                    if(bird.y - bird.radius < p.h || bird.y + bird.radius > p.h + PIPE_GAP) {
-                        gameOver();
-                        return;
+                ctx.fillStyle = '#facc15';
+                ctx.beginPath();
+                ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath();
+                ctx.arc(bird.x + 6, bird.y - 4, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (frame % SPAWN_RATE === 0) {
+                    const h = Math.random() * (canvas.height - PIPE_GAP - 100) + 50;
+                    pipes.push({ x: canvas.width, h: h, passed: false });
+                }
+
+                for (let i = pipes.length - 1; i >= 0; i--) {
+                    const p = pipes[i];
+                    p.x -= 3;
+
+                    ctx.fillStyle = '#334155';
+                    ctx.fillRect(p.x, 0, PIPE_WIDTH, p.h);
+                    ctx.fillRect(p.x, p.h + PIPE_GAP, PIPE_WIDTH, canvas.height - p.h - PIPE_GAP);
+
+                    if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + PIPE_WIDTH) {
+                        if (bird.y - bird.radius < p.h || bird.y + bird.radius > p.h + PIPE_GAP) {
+                            gameOver();
+                            return;
+                        }
                     }
+
+                    if (!p.passed && p.x + PIPE_WIDTH < bird.x) {
+                        p.passed = true;
+                        score++;
+                        scoreDisplay.innerText = score;
+                    }
+
+                    if (p.x + PIPE_WIDTH < 0) pipes.splice(i, 1);
                 }
 
-                // Score
-                if(!p.passed && p.x + PIPE_WIDTH < bird.x) {
-                    p.passed = true;
-                    score++;
-                    scoreDisplay.innerText = score;
-                }
-
-                if(p.x + PIPE_WIDTH < 0) pipes.splice(i, 1);
+                frame++;
+                animationId = requestAnimationFrame(gameLoop);
             }
 
-            frame++;
-            animationId = requestAnimationFrame(gameLoop);
-        }
-
-        initGame();
+            document.addEventListener('livewire:navigated', initGame);
+            document.addEventListener('DOMContentLoaded', initGame);
+            // Also init on Livewire update just in case, but wire:ignore should handle it
+            initGame();
+        })();
     </script>
 </div>
