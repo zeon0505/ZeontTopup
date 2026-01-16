@@ -27,6 +27,7 @@
             </div>
 
             <!-- Settings Dropdown -->
+            @auth
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Balance/Points (Optional Future Feature) -->
                 
@@ -60,6 +61,12 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @else
+            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
+                <a href="{{ route('login') }}" wire:navigate class="text-sm font-bold text-gray-400 hover:text-white transition-colors">Login</a>
+                <a href="{{ route('register') }}" wire:navigate class="px-4 py-2 bg-brand-yellow text-slate-900 text-sm font-bold rounded-full hover:bg-yellow-400 transition-all">Register</a>
+            </div>
+            @endauth
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
@@ -88,6 +95,7 @@
         </div>
 
         <!-- Responsive Settings Options -->
+        @auth
         <div class="pt-4 pb-1 border-t border-gray-700">
             <div class="px-4">
                 <div class="font-medium text-base text-white" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
@@ -107,5 +115,13 @@
                 </button>
             </div>
         </div>
+        @else
+        <div class="pt-4 pb-1 border-t border-gray-700">
+            <div class="px-4 space-y-2">
+                <a href="{{ route('login') }}" wire:navigate class="block text-base font-bold text-gray-400 hover:text-white transition-colors">Login</a>
+                <a href="{{ route('register') }}" wire:navigate class="block text-base font-bold text-brand-yellow hover:text-yellow-400 transition-colors">Register</a>
+            </div>
+        </div>
+        @endauth
     </div>
 </nav>
