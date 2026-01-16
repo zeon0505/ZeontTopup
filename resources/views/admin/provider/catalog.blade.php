@@ -1,7 +1,3 @@
-@extends('layouts.admin')
-
-@section('title', 'Katalog Provider')
-
-@section('content')
+<x-admin-layout title="Katalog Provider">
     <livewire:admin.provider-catalog />
-@endsection
+</x-admin-layout>
