@@ -128,4 +128,30 @@ class DigiflazzService implements ProviderServiceInterface
             return 0;
         }
     }
+
+    /**
+     * Fetch all prepaid products from Digiflazz
+     */
+    public function getProducts(): array
+    {
+        $payload = [
+            'cmd' => 'prepaid',
+            'username' => $this->username,
+            'sign' => $this->generateSign('pricelist')
+        ];
+
+        try {
+            $response = Http::post($this->baseUrl . '/price-list', $payload);
+            $data = $response->json();
+
+            if (isset($data['data'])) {
+                return $data['data'];
+            }
+
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Digiflazz Price List Error', ['error' => $e->getMessage()]);
+            return [];
+        }
+    }
 }

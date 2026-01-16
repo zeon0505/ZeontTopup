@@ -140,6 +140,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/referrals', \App\Livewire\Admin\ReferralManager::class)->name('admin.referrals');
     Route::get('/settings', \App\Livewire\Admin\SettingManager::class)->name('admin.settings');
     Route::get('/news', \App\Livewire\Admin\NewsManager::class)->name('admin.news');
+    Route::get('/provider/catalog', function () {
+        abort_unless(auth()->user()->is_admin, 403);
+        return view('admin.provider.catalog');
+    })->name('admin.provider.catalog');
     Route::get('/verify-pin', \App\Livewire\Admin\PinVerify::class)->name('admin.pin.verify');
 });
 

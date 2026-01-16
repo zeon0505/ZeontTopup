@@ -28,4 +28,11 @@ interface ProviderServiceInterface
      * @return float
      */
     public function getBalance(): float;
+
+    /**
+     * Get all products from provider
+     * 
+     * @return array
+     */
+    public function getProducts(): array;
 }

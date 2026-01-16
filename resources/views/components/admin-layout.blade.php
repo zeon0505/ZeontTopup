@@ -132,6 +132,13 @@
                         Site Settings
                     </a>
 
+                    <a href="{{ route('admin.provider.catalog') }}" class="flex items-center gap-3 px-6 py-3 text-gray-400 transition-all hover:text-brand-yellow hover:bg-white/5 border-l-4 border-transparent {{ request()->routeIs('admin.provider.catalog') ? 'bg-white/5 border-brand-yellow text-white' : '' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        Katalog Provider
+                    </a>
+
                     <a href="{{ route('admin.api') }}" class="flex items-center gap-3 px-6 py-3 text-gray-400 transition-all hover:text-brand-yellow hover:bg-white/5 border-l-4 border-transparent {{ request()->routeIs('admin.api') ? 'bg-white/5 border-brand-yellow text-white' : '' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
