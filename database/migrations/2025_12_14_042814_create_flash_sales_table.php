@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('product_id')->constrained()->cascadeOnDelete();
             $table->decimal('discount_price', 12, 2);
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
+            $table->timestamp('start_time')->nullable();
+            $table->timestamp('end_time')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
