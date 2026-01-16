@@ -152,6 +152,37 @@
                 </div>
             </div>
         </div>
+        <!-- Special Feature Logos -->
+        <div class="lg:col-span-2 bg-dark-800/50 backdrop-blur-xl border border-brand-yellow/20 rounded-3xl p-8 space-y-6">
+            <h2 class="text-xl font-black text-white italic flex items-center gap-3 mb-2 uppercase">
+                <div class="w-10 h-10 rounded-xl bg-brand-yellow/20 flex items-center justify-center text-brand-yellow">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+                </div>
+                Logo Fitur Spesial (Beranda)
+            </h2>
+            <p class="text-gray-400 text-sm mb-6">Ganti logo ikon untuk kartu fitur spesial yang muncul di halaman depan. Ukuran rekomendasi 128x128px.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @for($i = 1; $i <= 4; $i++)
+                    @php
+                        $titles = [1 => 'Zeon Flappy', 2 => 'Calculator', 3 => 'Leaderboard', 4 => 'Track Order'];
+                    @endphp
+                    <div class="space-y-4 p-4 bg-dark-900/50 rounded-2xl border border-gray-700/50">
+                        <label class="block text-xs font-black text-brand-yellow uppercase tracking-widest">{{ $titles[$i] }}</label>
+                        <div class="flex flex-col gap-4">
+                            @if($settings["feature_{$i}_logo"])
+                                <img src="{{ Storage::url($settings["feature_{$i}_logo"]) }}" class="w-16 h-16 rounded-xl object-contain bg-dark-800 border border-gray-700 mx-auto">
+                            @else
+                                <div class="w-16 h-16 rounded-xl bg-dark-800 border border-dashed border-gray-700 flex items-center justify-center mx-auto">
+                                    <span class="text-[10px] text-gray-500 font-bold">Standard SVG</span>
+                                </div>
+                            @endif
+                            <input type="file" wire:model="new_feature_{$i}_logo" class="text-[10px] text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                        </div>
+                    </div>
+                @endfor
+            </div>
+        </div>
     </div>
     
     <livewire:notification-toast />

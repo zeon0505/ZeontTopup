@@ -244,7 +244,6 @@
                 
                 // Update Overlay UI
                 const gameOverContent = document.getElementById('game-over-content');
-                const startContent = document.getElementById('start-content');
                 const finalScore = document.getElementById('final-score');
                 const highscoreBadge = document.getElementById('new-highscore-badge');
                 const buttonText = document.getElementById('button-text');
@@ -257,7 +256,7 @@
 
                 if (score > userHighScore && score > 0) {
                     highscoreBadge.classList.remove('hidden');
-                    userHighScore = score; // Update local tracker
+                    userHighScore = score;
                 } else {
                     highscoreBadge.classList.add('hidden');
                 }
@@ -265,12 +264,10 @@
                 startOverlay.style.display = 'flex';
                 startOverlay.classList.remove('opacity-0');
                 
-                const livewireComponent = window.Livewire.find(
-                    document.getElementById('game-container').closest('[wire:id]').getAttribute('wire:id')
-                );
-                if (livewireComponent) {
-                    livewireComponent.submitScore(score);
-                }
+                // Submit score to Livewire
+                @if(auth()->check())
+                    @this.submitScore(score);
+                @endif
             }
 
             function drawBird() {
@@ -345,19 +342,47 @@
             function gameLoop() {
                 if (!gameRunning) return;
 
-                // Background
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                if (score >= 10) {
-                    bgGrad.addColorStop(0, '#1e1b4b'); // Dark blue/purple
-                    bgGrad.addColorStop(1, '#450a0a'); // Dark red
+                // Difficulty Phases
+                let currentSpeed = 3;
+                let obstacleDifficulty = 0; // 0: None, 1: Slow, 2: Fast
+                let currentGap = PIPE_GAP;
+
+                if (score < 10) {
+                    currentSpeed = 3.2;
+                    obstacleDifficulty = 0;
+                } else if (score < 30) {
+                    currentSpeed = 3.8;
+                    obstacleDifficulty = 1; // Moving
+                } else if (score < 40) {
+                    currentSpeed = 2.8; // Santai
+                    obstacleDifficulty = 0; // No moving
+                    currentGap = 175; // Wider gap
+                } else if (score < 60) {
+                    currentSpeed = 4.2;
+                    obstacleDifficulty = 2; // Fast moving
+                    currentGap = 145;
                 } else {
-                    bgGrad.addColorStop(0, '#0f172a');
+                    currentSpeed = 4.8;
+                    obstacleDifficulty = 2;
+                    currentGap = 135;
+                }
+
+                // Background Colors for Phases
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                if (score >= 30 && score < 40) {
+                    bgGrad.addColorStop(0, '#064e3b'); // Relaxed Green
+                    bgGrad.addColorStop(1, '#065f46');
+                } else if (score >= 40) {
+                    bgGrad.addColorStop(0, '#1e1b4b'); // Intense Purple/Red
+                    bgGrad.addColorStop(1, '#450a0a');
+                } else {
+                    bgGrad.addColorStop(0, '#0f172a'); // Standard Dark
                     bgGrad.addColorStop(1, '#1e293b');
                 }
                 ctx.fillStyle = bgGrad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Clouds
+                // Clouds Decor
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
                 clouds.forEach(c => {
                     c.x -= c.speed;
@@ -379,36 +404,38 @@
 
                 drawBird();
 
-                // Pipes
-                if (frame % SPAWN_RATE === 0) {
-                    const h = Math.random() * (canvas.height - PIPE_GAP - 150) + 75;
+                // Pipe Spawning
+                const currentSpawnRate = score >= 40 ? 85 : SPAWN_RATE;
+                if (frame % currentSpawnRate === 0) {
+                    const h = Math.random() * (canvas.height - currentGap - 150) + 75;
                     pipes.push({ 
                         x: canvas.width, 
                         h: h, 
+                        gap: currentGap,
                         passed: false,
                         yOffset: 0,
                         direction: Math.random() > 0.5 ? 1 : -1 
                     });
                 }
 
-                const currentSpeed = score >= 10 ? 4 : 3;
-
                 for (let i = pipes.length - 1; i >= 0; i--) {
                     const p = pipes[i];
                     p.x -= currentSpeed;
 
-                    // Moving obstacle after 10 points
-                    if (score >= 10) {
-                        p.yOffset += p.direction * 1.2;
-                        if (Math.abs(p.yOffset) > 50) p.direction *= -1;
+                    // Obstacle Movement logic
+                    if (obstacleDifficulty > 0) {
+                        const moveSpeed = obstacleDifficulty === 1 ? 1.2 : 2.0;
+                        const moveRange = obstacleDifficulty === 1 ? 40 : 75;
+                        p.yOffset += p.direction * moveSpeed;
+                        if (Math.abs(p.yOffset) > moveRange) p.direction *= -1;
                     }
 
                     const activeH = p.h + p.yOffset;
-                    drawPipe(p.x, activeH, PIPE_GAP);
+                    drawPipe(p.x, activeH, p.gap);
 
-                    // Collision
+                    // Collistion detection
                     if (bird.x + bird.radius - 5 > p.x && bird.x - bird.radius + 5 < p.x + PIPE_WIDTH) {
-                        if (bird.y - bird.radius + 5 < activeH || bird.y + bird.radius - 5 > activeH + PIPE_GAP) {
+                        if (bird.y - bird.radius + 5 < activeH || bird.y + bird.radius - 5 > activeH + p.gap) {
                             gameOver();
                             return;
                         }

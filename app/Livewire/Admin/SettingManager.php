@@ -24,10 +24,18 @@ class SettingManager extends Component
         'maintenance_mode' => '0',
         'enable_popup' => '0',
         'popup_image' => '',
+        'feature_1_logo' => '',
+        'feature_2_logo' => '',
+        'feature_3_logo' => '',
+        'feature_4_logo' => '',
     ];
 
     public $new_logo;
     public $new_popup_image;
+    public $new_feature_1_logo;
+    public $new_feature_2_logo;
+    public $new_feature_3_logo;
+    public $new_feature_4_logo;
 
     public function mount()
     {
@@ -50,8 +58,19 @@ class SettingManager extends Component
             SiteSetting::set('popup_image', $path);
         }
 
+        for ($i = 1; $i <= 4; $i++) {
+            $fieldName = "new_feature_{$i}_logo";
+            $settingKey = "feature_{$i}_logo";
+            if ($this->$fieldName) {
+                $path = $this->$fieldName->store('site', 'public');
+                $this->settings[$settingKey] = $path;
+                SiteSetting::set($settingKey, $path);
+                $this->$fieldName = null;
+            }
+        }
+
         foreach ($this->settings as $key => $value) {
-            if ($key !== 'site_logo' && $key !== 'popup_image') { // Handled above if new
+            if (!str_starts_with($key, 'feature_') && $key !== 'site_logo' && $key !== 'popup_image') { // Handled above if new
                 SiteSetting::set($key, $value);
             }
         }
