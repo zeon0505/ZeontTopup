@@ -186,6 +186,12 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                     {{ __('Leaderboard') }}
                 </a>
+                <a href="{{ route('minigame') }}" class="flex items-center gap-2 pb-2 md:pb-4 border-b-2 transition-colors {{ request()->routeIs('minigame') ? 'text-brand-yellow border-brand-yellow' : 'text-gray-300 border-transparent hover:text-white' }}">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
+                    </svg>
+                    Zeon Flappy
+                </a>
             </div>
         </div>
     </nav>

@@ -7,7 +7,7 @@ use Livewire\Component;
 use App\Models\MiniGameScore;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.app')]
+#[Layout('components.layouts.app')]
 class FlappyGame extends \Livewire\Component
 {
     public $leaderboard = [];

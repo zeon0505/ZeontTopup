@@ -235,90 +235,85 @@
         </div>
     @endif
     
-    <!-- Mini Game Event Section -->
-    <div class="py-16 bg-slate-950 relative overflow-hidden group">
-        <!-- Background Decor -->
-        <div class="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[400px] bg-brand-yellow/5 rounded-full blur-[120px] pointer-events-none group-hover:bg-brand-yellow/10 transition-colors duration-1000"></div>
-        <div class="absolute top-1/2 right-1/4 -translate-y-1/2 w-[600px] h-[400px] bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none group-hover:bg-indigo-600/10 transition-colors duration-1000"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div data-aos="fade-up" class="bg-gradient-to-br from-slate-900 to-slate-900/50 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl flex flex-col lg:flex-row items-center gap-12 overflow-hidden group/card relative">
-                
-                <!-- Animated Elements Background -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-20 group-hover/card:opacity-40 transition-opacity">
-                    <!-- Random small bird icons or patterns could go here -->
-                    <div class="absolute top-10 right-20 w-12 h-12 text-brand-yellow/20 animate-bounce">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
-                    </div>
-                </div>
-
-                <!-- Game Preview Graphic -->
-                <div class="w-full lg:w-2/5 relative">
-                    <div class="aspect-video lg:aspect-square bg-slate-950 rounded-3xl border border-white/5 relative overflow-hidden shadow-2xl p-4 flex items-center justify-center group-hover/card:scale-105 transition-transform duration-700">
-                        <!-- Pseudo-Game UI -->
-                        <div class="w-full h-full border-2 border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center relative">
-                            <div class="w-20 h-20 bg-brand-yellow rounded-xl shadow-[0_0_30px_rgba(250,204,21,0.5)] animate-bounce flex items-center justify-center">
-                                <svg class="w-12 h-12 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
-                                </svg>
-                            </div>
-                            <!-- Fake Pipes -->
-                            <div class="absolute top-0 right-10 w-10 h-20 bg-slate-800 rounded-b-lg border-x border-b border-white/10"></div>
-                            <div class="absolute bottom-0 left-20 w-10 h-32 bg-slate-800 rounded-t-lg border-x border-t border-white/10"></div>
-                            
-                            <!-- Points Tag -->
-                            <div class="absolute top-4 left-4 px-3 py-1 bg-brand-yellow/20 border border-brand-yellow/30 rounded-full text-brand-yellow font-black text-xs">
-                                99+ PTS
-                            </div>
+    <!-- Special Features Grid -->
+    <div class="py-12 bg-slate-950 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="text-xl font-black text-white italic truncate uppercase">SPECIAL FEATURES 🚀</h2>
+                <div class="flex-1 h-px bg-white/5"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Zeon Flappy Card -->
+                <a href="{{ route('minigame') }}" 
+                   data-aos="zoom-in"
+                   class="group relative block aspect-square rounded-[2.5rem] bg-slate-900 border border-white/5 hover:border-brand-yellow/50 transition-all duration-300 hover:-translate-y-2 shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-16 h-16 bg-brand-yellow rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(250,204,21,0.2)] mb-4 group-hover:scale-110 transition-transform animate-bounce-slow">
+                            <svg class="w-10 h-10 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
+                            </svg>
                         </div>
+                        <h3 class="text-white font-black italic text-sm group-hover:text-brand-yellow transition-colors leading-tight">ZEON<br>FLAPPY</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-2">Play & Win</p>
                     </div>
-                </div>
-
-                <!-- Content -->
-                <div class="w-full lg:w-3/5 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-xs font-black uppercase tracking-widest mb-6">
+                    <!-- Status Badge -->
+                    <div class="absolute top-5 right-5 pb-1">
                         <span class="relative flex h-2 w-2">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
                         </span>
-                        Event Terbatas
                     </div>
-                    <h2 class="text-4xl md:text-5xl font-black text-white italic mb-6 leading-tight">
-                        MAIN GAME, <br>
-                        DAPAT <span class="text-brand-yellow">VOUCHER!</span> 🏆
-                    </h2>
-                    <p class="text-gray-400 text-lg mb-8 max-w-xl">
-                        Adu ketangkasan di <span class="text-white font-bold">Zeon Flappy</span>. Jadilah Juara 1 hari ini dan dapatkan Voucher Belanja otomatis setiap jam 00:00 WIB!
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row items-center gap-4">
-                        <a href="{{ route('minigame') }}" class="w-full sm:w-auto px-10 py-4 bg-brand-yellow text-slate-950 font-black italic rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(250,204,21,0.3)] hover:shadow-[0_15px_40px_rgba(250,204,21,0.4)] flex items-center justify-center gap-3">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                            MAIN SEKARANG
-                        </a>
-                        <div class="text-gray-500 text-sm font-medium">
-                            No download required • Mobile friendly
-                        </div>
-                    </div>
+                </a>
 
-                    <!-- Mini Stats -->
-                    <div class="mt-12 pt-8 border-t border-white/5 grid grid-cols-2 md:grid-cols-3 gap-8">
-                        <div>
-                            <div class="text-white font-black text-xl italic">Rp 5.000</div>
-                            <div class="text-gray-500 text-xs uppercase font-bold tracking-widest">Reward Voucher</div>
+                <!-- Calculator Card -->
+                <a href="{{ route('calculator.index') }}" 
+                   data-aos="zoom-in" data-aos-delay="100"
+                   class="group relative block aspect-square rounded-[2.5rem] bg-slate-900 border border-white/5 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.2)] mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"/>
+                            </svg>
                         </div>
-                        <div>
-                            <div class="text-white font-black text-xl italic">24 JAM</div>
-                            <div class="text-gray-500 text-xs uppercase font-bold tracking-widest">Reset Periode</div>
-                        </div>
-                        <div class="hidden md:block">
-                            <div class="text-white font-black text-xl italic">FREE</div>
-                            <div class="text-gray-500 text-xs uppercase font-bold tracking-widest">Untuk Semua Member</div>
-                        </div>
+                        <h3 class="text-white font-black italic text-sm group-hover:text-blue-400 transition-colors leading-tight">CALKU<br>LATOR</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-2">Free Tools</p>
                     </div>
-                </div>
+                </a>
+
+                <!-- Leaderboard Card -->
+                <a href="{{ route('leaderboard') }}" 
+                   data-aos="zoom-in" data-aos-delay="200"
+                   class="group relative block aspect-square rounded-[2.5rem] bg-slate-900 border border-white/5 hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-2 shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(79,70,229,0.2)] mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-white font-black italic text-sm group-hover:text-indigo-400 transition-colors leading-tight">LEADER<br>BOARD</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-2">Top Player</p>
+                    </div>
+                </a>
+
+                <!-- Track Order Card -->
+                <a href="{{ route('transaction.search') }}" 
+                   data-aos="zoom-in" data-aos-delay="300"
+                   class="group relative block aspect-square rounded-[2.5rem] bg-slate-900 border border-white/5 hover:border-green-500/50 transition-all duration-300 hover:-translate-y-2 shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(22,163,74,0.2)] mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-white font-black italic text-sm group-hover:text-green-400 transition-colors leading-tight">TRACK<br>ORDER</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-2">Check Status</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
